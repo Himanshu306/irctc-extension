@@ -1,5 +1,6 @@
 /* global chrome */
 import React, { useState, useEffect } from 'react';
+import './IrctcForm.css';
 import Tesseract from 'tesseract.js';
 
 const IrctcForm = () => {
@@ -39,7 +40,7 @@ const IrctcForm = () => {
           args: [passengers]
         }).then(() => {
           // Script injection successful
-          chrome.runtime.sendMessage({ action: 'fillForm', passengers }, (response) => {
+          chrome.tabs.sendMessage(tabId, { action: 'fillForm', passengers }, (response) => {
             console.log('Message sent, response:', response);
           });
         }).catch((error) => {
@@ -51,29 +52,32 @@ const IrctcForm = () => {
   
 
   return (
-    <div className="App">
+    <div className="irctcExtension">
       <h3>Passenger Details</h3>
       {passengers.map((passenger, index) => (
-        <div key={index}>
+        <div className="passenger-row" key={index}>
+          <p style={{fontWeight : "300"}}>Passenger {index + 1}</p>
           <input
+            className="input-field"
             type="text"
             placeholder="Passenger Name"
             value={passenger.name}
             onChange={(e) => handleChange(index, 'name', e.target.value)}
           />
           <input
+            className="input-field"
             type="number"
             placeholder="Age"
             value={passenger.age}
             onChange={(e) => handleChange(index, 'age', e.target.value)}
           />
-          <select value={passenger.gender} onChange={(e) => handleChange(index, 'gender', e.target.value)}>
+          <select className="select-field" value={passenger.gender} onChange={(e) => handleChange(index, 'gender', e.target.value)}>
             <option value="">Gender</option>
             <option value="M">Male</option>
             <option value="F">Female</option>
             <option value="T">Transgender</option>
           </select>
-          <select value={passenger.nationality} onChange={(e) => handleChange(index, 'nationality', e.target.value)}>
+          <select className="select-field" value={passenger.nationality} onChange={(e) => handleChange(index, 'nationality', e.target.value)}>
             <option value="">Nationality</option>
             <option value="AF">Afghanistan</option>
             <option value="AL">Albania</option>
@@ -81,9 +85,11 @@ const IrctcForm = () => {
           </select>
         </div>
       ))}
-      <button onClick={addPassengerRow}>Add Passenger</button>
-      <button onClick={handleSubmit}>Fill Form</button>
-      <button onClick={clearForm}>Clear Form</button>
+      <div className="button-group">
+        <button className="action-button" onClick={addPassengerRow}>Add Passenger</button>
+        <button className="action-button" onClick={handleSubmit}>Fill Form</button>
+        <button className="action-button" onClick={clearForm}>Clear Form</button>
+      </div>
     </div>
   );
 };

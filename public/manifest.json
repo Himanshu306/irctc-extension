@@ -3,7 +3,7 @@
   "name": "IRCTC Form Filler",
   "version": "1.0",
   "description": "Automatically fills the IRCTC form with passenger details.",
-  "permissions": ["scripting", "activeTab", "storage", "webNavigation"],
+  "permissions": ["scripting", "activeTab", "storage", "tabs", "webNavigation"],
   "background": {
     "service_worker": "background.js"
   },
@@ -12,15 +12,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://www.irctc.co.in/*"],
-      "js": ["content.js"]
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
     }
   ],
   "host_permissions": ["*://www.irctc.co.in/*"],
-  "web_accessible_resources": [
-    {
-      "resources": ["*"],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
 }

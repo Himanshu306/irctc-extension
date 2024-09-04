@@ -1,17 +1,26 @@
+/* global chrome */
+
 chrome.runtime.onInstalled.addListener(() => {
   console.log("IRCTC Form Renderer Extension Installed");
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Message received in background script:', message);
-  if (message.action === 'fillForm') {
-    chrome.scripting.executeScript({
-      target: { tabId: sender.tab.id },
-      files: ['content.js']
-    }).then(() => {
-      console.log('Content script injected successfully.');
-    }).catch((error) => {
-      console.error('Error injecting content script:', error);
-    });
-  }
-});
+
+// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+//   console.log("request.imageData", request.imageData);
+//   if (request.action === "startOCR") {
+//       const worker = new Worker(chrome.runtime.getURL('worker.js'));
+
+//       worker.onmessage = function(event) {
+//           sendResponse(event.data);
+//       };
+
+//       worker.postMessage({
+//           // any data you want to send to the worker
+//           cmd: 'recognize',
+//           imageData: request.imageData,
+//           options: { /* options */ }
+//       });
+
+//       return true; // Keep the message channel open for sendResponse
+//   }
+// });
